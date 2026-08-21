@@ -5,7 +5,7 @@ A complete, small Retrieval-Augmented Generation (RAG) backend that lets you upl
 - **FastAPI** for the REST API and Swagger UI
 - **MySQL** for documents, chunks, chat sessions, and message history
 - **Pinecone** for semantic vector search
-- **Sentence Transformers** for local embeddings
+- **Hugging Face's hosted inference API** for embeddings (kept out of the server process so it stays light enough for a free-tier deploy)
 - **Groq** for answer generation
 - Optional **BM25 hybrid search** and a lightweight reranker
 
@@ -55,6 +55,7 @@ You need:
    - Metric: `cosine`
    - Name: `rag-chatbot` (or change the environment variable)
 3. A Groq API key (free at <https://console.groq.com/keys>).
+4. A Hugging Face read token (free at <https://huggingface.co/settings/tokens>), used to call the hosted embeddings API.
 
 The default embedding model, `sentence-transformers/all-MiniLM-L6-v2`, produces 384-dimensional vectors. If you change it, recreate the Pinecone index with the new dimension.
 
@@ -209,7 +210,7 @@ pytest -q
 - **No useful context found:** upload a text-based PDF, lower `MIN_RETRIEVAL_SCORE`, or ask a more specific question.
 - **Scanned PDF returns no text:** this starter does not include OCR. Add Tesseract or a cloud document parser.
 - **Groq model error:** choose a chat-completion model available on Groq and confirm your API key has access.
-- **First upload is slow:** the sentence-transformer model downloads once and is then cached.
+- **Embedding request fails:** confirm `HF_TOKEN` is set and valid — embeddings are called via Hugging Face's hosted API, not loaded locally.
 - **MySQL connection refused:** wait for its health check, verify credentials, and use hostname `mysql` only inside Docker.
 
 ## Production improvements

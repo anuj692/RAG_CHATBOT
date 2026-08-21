@@ -29,6 +29,7 @@ class Settings(BaseSettings):
 
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     embedding_dimension: int = Field(default=384, ge=1)
+    hf_token: str = ""
 
     pinecone_api_key: str = ""
     pinecone_index_name: str = "rag-chatbot"
