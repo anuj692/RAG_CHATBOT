@@ -1,4 +1,7 @@
 import { useRef, useState } from "react";
+import type { DragEvent } from "react";
+import clsx from "clsx";
+import { UploadCloud } from "lucide-react";
 import { useUploadDocumentMutation } from "../../hooks/useDocuments";
 import { toErrorMessage } from "../../lib/api";
 import { ErrorBanner } from "../ui/ErrorBanner";
@@ -10,6 +13,7 @@ interface DocumentUploadProps {
 
 export function DocumentUpload({ onUploaded }: DocumentUploadProps) {
   const [error, setError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const upload = useUploadDocumentMutation();
 
@@ -26,6 +30,12 @@ export function DocumentUpload({ onUploaded }: DocumentUploadProps) {
     });
   };
 
+  const handleDrop = (event: DragEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+    handleFile(event.dataTransfer.files?.[0]);
+  };
+
   return (
     <div className="flex flex-col gap-2">
       <input
@@ -39,13 +49,27 @@ export function DocumentUpload({ onUploaded }: DocumentUploadProps) {
         type="button"
         disabled={upload.isPending}
         onClick={() => inputRef.current?.click()}
-        className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:border-indigo-400 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:text-slate-300 dark:hover:border-indigo-500 dark:hover:text-indigo-400"
+        onDragOver={(event) => {
+          event.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleDrop}
+        className={clsx(
+          "flex flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed px-3 py-4 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60",
+          isDragging
+            ? "border-violet-400 bg-violet-50 text-violet-600 dark:border-violet-500 dark:bg-violet-950/40 dark:text-violet-300"
+            : "border-slate-300 text-slate-500 hover:border-violet-400 hover:bg-violet-50/50 hover:text-violet-600 dark:border-slate-700 dark:text-slate-400 dark:hover:border-violet-500 dark:hover:bg-violet-950/20 dark:hover:text-violet-300",
+        )}
       >
         {upload.isPending ? (
           <Spinner label="Uploading…" />
         ) : (
           <>
-            <span aria-hidden>＋</span> Upload PDF
+            <UploadCloud className="h-5 w-5" />
+            <span>
+              <span className="font-semibold">Click to upload</span> or drag a PDF
+            </span>
           </>
         )}
       </button>

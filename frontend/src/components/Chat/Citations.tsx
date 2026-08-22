@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { ChevronRight, FileText } from "lucide-react";
+import clsx from "clsx";
 import type { Citation } from "../../lib/types";
 
 interface CitationsProps {
@@ -15,17 +17,13 @@ export function Citations({ citations }: CitationsProps) {
       <button
         type="button"
         onClick={() => setExpanded((value) => !value)}
-        className="flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+        className="flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-violet-600 dark:text-slate-400 dark:hover:text-violet-300"
         aria-expanded={expanded}
       >
-        <span
-          className={`inline-block transition-transform ${expanded ? "rotate-90" : ""}`}
-        >
-          ▶
-        </span>
-        {citations.length === 1
-          ? "1 source"
-          : `${citations.length} sources`}
+        <ChevronRight
+          className={clsx("h-3.5 w-3.5 transition-transform", expanded && "rotate-90")}
+        />
+        {citations.length === 1 ? "1 source" : `${citations.length} sources`}
       </button>
 
       {expanded ? (
@@ -33,12 +31,13 @@ export function Citations({ citations }: CitationsProps) {
           {citations.map((citation) => (
             <li
               key={citation.chunk_id}
-              className="flex items-center justify-between gap-2 rounded-md bg-slate-100 px-2.5 py-1.5 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+              className="flex items-center gap-2 rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs text-slate-600 dark:bg-slate-700/60 dark:text-slate-300"
             >
-              <span className="truncate" title={citation.file_name}>
+              <FileText className="h-3.5 w-3.5 shrink-0 text-violet-500 dark:text-violet-300" />
+              <span className="min-w-0 flex-1 truncate" title={citation.file_name}>
                 {citation.file_name} · page {citation.page_number}
               </span>
-              <span className="shrink-0 rounded bg-slate-200 px-1.5 py-0.5 font-mono text-[11px] text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+              <span className="shrink-0 rounded bg-violet-100 px-1.5 py-0.5 font-mono text-[11px] font-medium text-violet-700 dark:bg-violet-950/50 dark:text-violet-300">
                 {(citation.score * 100).toFixed(1)}%
               </span>
             </li>
