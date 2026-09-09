@@ -3,7 +3,7 @@
 A complete, small Retrieval-Augmented Generation (RAG) backend that lets you upload PDFs and ask questions about them. It uses:
 
 - **FastAPI** for the REST API and Swagger UI
-- **MySQL** for documents, chunks, chat sessions, and message history
+- **SQLITE** for documents, chunks, chat sessions, and message history
 - **Pinecone** for semantic vector search
 - **Hugging Face's hosted inference API** for embeddings (kept out of the server process so it stays light enough for a free-tier deploy)
 - **Groq** for answer generation
