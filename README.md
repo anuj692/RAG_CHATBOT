@@ -1,5 +1,5 @@
 # Beginner RAG Chatbot with FastAPI
-
+LIVE LINK-https://frontend-six-mu-irlraoq7g9.vercel.app/
 A complete, small Retrieval-Augmented Generation (RAG) backend that lets you upload PDFs and ask questions about them. It uses:
 
 - **FastAPI** for the REST API and Swagger UI
